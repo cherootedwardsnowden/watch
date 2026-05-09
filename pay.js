@@ -49,7 +49,6 @@ window.addEventListener('lumen-ready', async () => {
   }
 
   show('select');
-  await loadCurrencies();
 
   const sel = document.getElementById('currencySelect');
   const createBtn = document.getElementById('createBtn');
@@ -58,6 +57,13 @@ window.addEventListener('lumen-ready', async () => {
   const estCurrency = document.getElementById('estCurrency');
 
   let lastEstimate = null;
+
+  try { await loadCurrencies(); }
+  catch (e) {
+    console.error('[pay] loadCurrencies threw:', e);
+    sel.innerHTML = '';
+    sel.appendChild(u.el('option', { value: '' }, t('pay_load_currencies_fail', 'Could not load currencies')));
+  }
 
   sel.addEventListener('change', async () => {
     const c = sel.value;
