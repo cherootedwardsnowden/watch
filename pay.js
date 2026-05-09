@@ -99,19 +99,25 @@ window.addEventListener('lumen-ready', async () => {
   });
 
   async function loadCurrencies() {
+    const popular = ['btc', 'eth', 'usdttrc20', 'usdterc20', 'usdtbsc', 'ltc', 'doge', 'sol', 'xmr', 'bnbbsc', 'trx', 'matic', 'ada', 'bch', 'dot'];
+    let list = [];
     try {
       const r = await window.LumenApi.get('/api/payment/currencies');
-      const list = r.currencies || [];
-      sel.innerHTML = '';
-      sel.appendChild(u.el('option', { value: '' }, t('pay_select_placeholder', 'Select a coin / network')));
-      const popular = ['btc', 'eth', 'usdttrc20', 'usdterc20', 'usdtbsc', 'ltc', 'doge', 'sol', 'xmr', 'bnbbsc', 'trx', 'matic'];
-      const sorted = [...new Set([...popular.filter(p => list.includes(p)), ...list])];
-      for (const code of sorted) {
-        sel.appendChild(u.el('option', { value: code }, code.toUpperCase()));
-      }
+      if (r && Array.isArray(r.currencies)) list = r.currencies.map(c => String(c).toLowerCase());
     } catch (e) {
-      sel.innerHTML = '';
-      sel.appendChild(u.el('option', { value: '' }, t('pay_load_currencies_fail', 'Could not load currencies')));
+      console.warn('[pay] currencies api failed:', e.message);
+    }
+    if (!list.length) list = popular;
+    sel.innerHTML = '';
+    sel.appendChild(u.el('option', { value: '' }, t('pay_select_placeholder', 'Select a coin / network')));
+    const popularSet = new Set(popular);
+    const inList = new Set(list);
+    const ordered = [...popular.filter(p => inList.has(p)), ...list.filter(c => !popularSet.has(c))];
+    const seen = new Set();
+    for (const code of ordered) {
+      if (seen.has(code)) continue;
+      seen.add(code);
+      sel.appendChild(u.el('option', { value: code }, code.toUpperCase()));
     }
   }
 
