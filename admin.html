@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title data-i18n="meta_title_admin">Admin</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono&display=swap">
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body class="admin-body">
+<header class="topbar">
+  <a class="brand" href="/">
+    <span class="logo-dot"></span>
+    <span class="brand-name">LUMEN</span>
+    <span class="brand-tag" data-i18n="admin_panel">Admin</span>
+  </a>
+  <nav class="nav">
+    <select id="langSwitcher" class="lang-switcher" aria-label="language"></select>
+    <button id="logoutBtn" class="btn btn-ghost" data-i18n="nav_logout">Sign out</button>
+  </nav>
+</header>
+
+<main class="admin-wrap" id="adminApp" hidden>
+  <aside class="admin-side">
+    <button class="admin-tab active" data-tab="dashboard" data-i18n="admin_tab_dashboard">Dashboard</button>
+    <button class="admin-tab" data-tab="upload" data-i18n="admin_tab_upload">Upload</button>
+    <button class="admin-tab" data-tab="videos" data-i18n="admin_tab_videos">Videos</button>
+    <button class="admin-tab" data-tab="payments" data-i18n="admin_tab_payments">Payments</button>
+    <button class="admin-tab" data-tab="users" data-i18n="admin_tab_users">Users</button>
+  </aside>
+
+  <section class="admin-main">
+    <div class="admin-pane" data-pane="dashboard">
+      <h1 data-i18n="admin_dashboard_title">Dashboard</h1>
+      <div class="stat-grid" id="statGrid"></div>
+    </div>
+
+    <div class="admin-pane" data-pane="upload" hidden>
+      <h1 data-i18n="admin_upload_title">Upload a video</h1>
+      <p class="muted" data-i18n="admin_upload_hint">Files are uploaded in chunks. If the page closes mid-upload, the next visit can resume.</p>
+
+      <form id="uploadForm" class="upload-form">
+        <label class="field">
+          <span data-i18n="admin_upload_title_label">Title</span>
+          <input type="text" name="title" required>
+        </label>
+        <label class="field">
+          <span data-i18n="admin_upload_desc_label">Description</span>
+          <textarea name="description" rows="3"></textarea>
+        </label>
+        <label class="field file-field">
+          <span data-i18n="admin_upload_file_label">Video file</span>
+          <input type="file" name="file" accept="video/*" required>
+        </label>
+        <button type="submit" class="btn btn-primary" data-i18n="admin_upload_start">Start upload</button>
+      </form>
+
+      <h2 data-i18n="admin_active_uploads">Active uploads</h2>
+      <div id="uploadList" class="upload-list"></div>
+    </div>
+
+    <div class="admin-pane" data-pane="videos" hidden>
+      <h1 data-i18n="admin_videos_title">Videos</h1>
+      <table class="data-table" id="videosTable">
+        <thead><tr>
+          <th data-i18n="th_thumb">Thumb</th>
+          <th data-i18n="th_title">Title</th>
+          <th data-i18n="th_status">Status</th>
+          <th data-i18n="th_duration">Duration</th>
+          <th data-i18n="th_resolution">Res</th>
+          <th data-i18n="th_created">Created</th>
+          <th data-i18n="th_actions">Actions</th>
+        </tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <div class="admin-pane" data-pane="payments" hidden>
+      <h1 data-i18n="admin_payments_title">Payments</h1>
+      <div class="filter-row">
+        <button class="chip active" data-filter="all" data-i18n="filter_all">All</button>
+        <button class="chip" data-filter="pending" data-i18n="filter_pending">Pending</button>
+        <button class="chip" data-filter="awaiting_payment" data-i18n="filter_awaiting">Awaiting</button>
+        <button class="chip" data-filter="paid" data-i18n="filter_paid">Paid</button>
+        <button class="chip" data-filter="failed" data-i18n="filter_failed">Failed</button>
+        <button class="chip" data-filter="expired" data-i18n="filter_expired">Expired</button>
+      </div>
+      <table class="data-table" id="paymentsTable">
+        <thead><tr>
+          <th data-i18n="th_email">Email</th>
+          <th data-i18n="th_status">Status</th>
+          <th data-i18n="th_amount">Amount</th>
+          <th data-i18n="th_currency">Currency</th>
+          <th data-i18n="th_created">Created</th>
+          <th data-i18n="th_link">Link</th>
+        </tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <div class="admin-pane" data-pane="users" hidden>
+      <h1 data-i18n="admin_users_title">Subscribers</h1>
+      <table class="data-table" id="usersTable">
+        <thead><tr>
+          <th data-i18n="th_username">Username</th>
+          <th data-i18n="th_email">Email</th>
+          <th data-i18n="th_status">Status</th>
+          <th data-i18n="th_expires">Expires</th>
+          <th data-i18n="th_created">Created</th>
+        </tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </section>
+</main>
+
+<div id="adminLogin" class="admin-login-wrap">
+  <div class="auth-card">
+    <h1 data-i18n="admin_login_title">Admin sign-in</h1>
+    <form id="adminLoginForm" class="auth-form" autocomplete="off">
+      <label class="field">
+        <span data-i18n="field_username">Username</span>
+        <input type="text" name="username" required>
+      </label>
+      <label class="field">
+        <span data-i18n="field_password">Password</span>
+        <input type="password" name="password" required>
+      </label>
+      <button type="submit" class="btn btn-primary btn-block" data-i18n="admin_login_submit">Enter admin</button>
+      <div id="adminLoginError" class="form-error" hidden></div>
+    </form>
+  </div>
+</div>
+
+<script src="/static/i18n_client.js"></script>
+<script src="/static/app.js"></script>
+<script src="/static/admin.js"></script>
+</body>
+</html>

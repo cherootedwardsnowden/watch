@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<title data-i18n="meta_title_watch">Player</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono&display=swap">
+<link rel="stylesheet" href="/static/style.css">
+<script src="https://cdn.jsdelivr.net/npm/hls.js@1.5.18/dist/hls.min.js"></script>
+</head>
+<body class="watch-body">
+<header class="topbar">
+  <a class="brand" href="/">
+    <span class="logo-dot"></span>
+    <span class="brand-name">LUMEN</span>
+  </a>
+  <nav class="nav">
+    <select id="langSwitcher" class="lang-switcher" aria-label="language"></select>
+    <a href="/" class="btn btn-ghost" data-i18n="watch_back">Back</a>
+    <a href="/login" class="btn btn-ghost" data-auth-show="anon" data-i18n="nav_login">Sign in</a>
+    <a href="/register" class="btn btn-primary" data-auth-show="anon" data-i18n="nav_register">Get Premium</a>
+    <button class="btn btn-ghost" data-auth-show="auth" id="logoutBtn" data-i18n="nav_logout">Sign out</button>
+  </nav>
+</header>
+
+<main class="watch-wrap">
+  <div class="player-shell">
+    <div class="player-frame" id="playerFrame">
+      <video id="player" playsinline controlsList="nodownload noplaybackrate" oncontextmenu="return false" disablepictureinpicture></video>
+      <div class="player-mask" id="playerMask">
+        <button id="bigPlayBtn" class="big-play" aria-label="play"></button>
+      </div>
+      <div class="player-overlay" id="playerOverlay" hidden>
+        <div class="overlay-msg">
+          <h2 id="overlayTitle" data-i18n="watch_preview_ended_title">Preview ended.</h2>
+          <p id="overlayBody" data-i18n="watch_preview_ended_body">Subscribe for $5 / month to watch the full library.</p>
+          <a class="btn btn-primary btn-lg" href="/register" data-i18n="watch_overlay_subscribe">Get Premium</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="watch-meta">
+    <h1 id="videoTitle"></h1>
+    <p id="videoDesc" class="muted"></p>
+    <p class="watch-mode" id="watchMode"></p>
+  </div>
+</main>
+
+<script src="/static/i18n_client.js"></script>
+<script src="/static/app.js"></script>
+<script src="/static/watch.js"></script>
+</body>
+</html>

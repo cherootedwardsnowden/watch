@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title data-i18n="meta_title_register">Get Premium</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono&display=swap">
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body class="auth-body">
+<header class="topbar">
+  <a class="brand" href="/">
+    <span class="logo-dot"></span>
+    <span class="brand-name">LUMEN</span>
+  </a>
+  <nav class="nav">
+    <select id="langSwitcher" class="lang-switcher" aria-label="language"></select>
+    <a href="/login" class="btn btn-ghost" data-i18n="nav_login">Sign in</a>
+  </nav>
+</header>
+
+<main class="auth-wrap">
+  <div class="auth-card auth-card-wide">
+    <h1 data-i18n="register_title">One click to Premium.</h1>
+    <p class="auth-sub" data-i18n="register_subtitle">Enter the email you want your credentials sent to. The next page generates a unique crypto address for your one-month subscription.</p>
+
+    <form id="registerForm" class="auth-form">
+      <label class="field">
+        <span data-i18n="field_email">Email</span>
+        <input type="email" name="email" autocomplete="email" required placeholder="you@example.com">
+      </label>
+      <button type="submit" class="btn btn-primary btn-block btn-lg" data-i18n="register_submit">Continue to crypto checkout</button>
+      <div id="registerError" class="form-error" hidden></div>
+    </form>
+
+    <div class="info-block">
+      <h3 data-i18n="register_info_title">Subscription details</h3>
+      <ul class="info-list">
+        <li><strong data-i18n="register_price_label">Price:</strong> <span data-i18n="register_price_value">$5 USD / month</span></li>
+        <li><strong data-i18n="register_method_label">Method:</strong> <span data-i18n="register_method_value">Crypto only - via NowPayments</span></li>
+        <li><strong data-i18n="register_period_label">Period:</strong> <span data-i18n="register_period_value">30 days from confirmation</span></li>
+        <li><strong data-i18n="register_delivery_label">Delivery:</strong> <span data-i18n="register_delivery_value">Username and password emailed instantly upon confirmation</span></li>
+      </ul>
+
+      <h3 data-i18n="register_security_title">How it stays secure</h3>
+      <p data-i18n="register_security_p1">After you click continue, we generate a private payment page tied to your IP address. Only you, on this device and network, can open it. The URL contains a long random slug, so it is not guessable, listable, or indexable.</p>
+      <p data-i18n="register_security_p2">When you choose a coin and network, the price for $5 is computed from the live exchange rate and locked in. The crypto address you see is generated for you alone, on demand, by NowPayments. Send the exact amount within five minutes. We poll the blockchain every ten seconds and confirm as soon as the transaction is broadcast.</p>
+      <p data-i18n="register_security_p3">Once your payment confirms, the system creates a fresh username and a long random password, hashes that password with bcrypt before saving, and emails the plaintext credentials to you over Maileroo SMTP with TLS. We never see, store, or log the password in plaintext on the server.</p>
+      <p data-i18n="register_security_p4">Logins are rate-limited per IP. Sessions are signed JWTs delivered through HttpOnly, SameSite cookies, never exposed to JavaScript. Inside the app, every video URL you receive is unique to you, your IP, and a five-minute window. Reload the page and you get a brand new URL. Share it with anyone else and it dies the moment another IP touches it.</p>
+      <p data-i18n="register_security_p5">Video segments are AES-128 encrypted and the decryption key is itself fetched through a token bound to your session. There is no plain MP4 to download, no progressive stream, no obvious file path - only short, signed, IP-locked HLS chunks. Right-click is disabled in the player and the source attribute is replaced after every load.</p>
+      <p data-i18n="register_security_p6">We use no analytics. We do not ask for your name, your card, or your phone. We only need an email to deliver credentials. After your subscription expires, your account remains, but premium streaming returns to a 15-second preview until you renew.</p>
+    </div>
+  </div>
+</main>
+
+<script src="/static/i18n_client.js"></script>
+<script src="/static/app.js"></script>
+<script src="/static/register.js"></script>
+</body>
+</html>

@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title data-i18n="meta_title_login">Sign in</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono&display=swap">
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body class="auth-body">
+<header class="topbar">
+  <a class="brand" href="/">
+    <span class="logo-dot"></span>
+    <span class="brand-name">LUMEN</span>
+  </a>
+  <nav class="nav">
+    <select id="langSwitcher" class="lang-switcher" aria-label="language"></select>
+    <a href="/register" class="btn btn-ghost" data-i18n="nav_register">Get Premium</a>
+  </nav>
+</header>
+
+<main class="auth-wrap">
+  <div class="auth-card">
+    <h1 data-i18n="login_title">Welcome back</h1>
+    <p class="auth-sub" data-i18n="login_subtitle">Use the credentials we emailed you after your payment.</p>
+    <form id="loginForm" class="auth-form" autocomplete="off">
+      <label class="field">
+        <span data-i18n="field_username">Username or email</span>
+        <input type="text" name="username" autocomplete="username" required>
+      </label>
+      <label class="field">
+        <span data-i18n="field_password">Password</span>
+        <input type="password" name="password" autocomplete="current-password" required>
+      </label>
+      <button type="submit" class="btn btn-primary btn-block" data-i18n="login_submit">Sign in</button>
+      <div id="loginError" class="form-error" hidden></div>
+    </form>
+    <div class="auth-foot">
+      <span data-i18n="login_no_account">No account yet?</span>
+      <a href="/register" data-i18n="login_get_premium">Get Premium</a>
+    </div>
+  </div>
+</main>
+
+<script src="/static/i18n_client.js"></script>
+<script src="/static/app.js"></script>
+<script src="/static/login.js"></script>
+</body>
+</html>

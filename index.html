@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<title data-i18n="meta_title_home">Premium Streaming</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono&display=swap">
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="/">
+    <span class="logo-dot"></span>
+    <span class="brand-name">LUMEN</span>
+  </a>
+  <nav class="nav">
+    <select id="langSwitcher" class="lang-switcher" aria-label="language"></select>
+    <a href="/login" class="btn btn-ghost" data-auth-show="anon" data-i18n="nav_login">Sign in</a>
+    <a href="/register" class="btn btn-primary" data-auth-show="anon" data-i18n="nav_register">Get Premium</a>
+    <a href="/admin" class="btn btn-ghost" data-auth-show="admin" data-i18n="nav_admin">Admin</a>
+    <span class="user-pill" data-auth-show="user">
+      <span data-auth-username></span>
+      <span class="dot" data-auth-show="subscriber"></span>
+      <span class="subscriber-tag" data-auth-show="subscriber" data-i18n="badge_premium">Premium</span>
+    </span>
+    <button class="btn btn-ghost" data-auth-show="auth" id="logoutBtn" data-i18n="nav_logout">Sign out</button>
+  </nav>
+</header>
+
+<main class="container">
+  <section class="hero">
+    <h1 data-i18n="home_hero_title">Cinema-grade streaming, on a private channel.</h1>
+    <p data-i18n="home_hero_subtitle">Pay once a month in crypto. Watch in full quality. No ads, no tracking, no downloads.</p>
+    <div class="hero-actions" data-auth-show="anon">
+      <a href="/register" class="btn btn-primary btn-lg" data-i18n="home_cta_subscribe">Get Premium - $5 / month</a>
+      <a href="/login" class="btn btn-ghost btn-lg" data-i18n="home_cta_login">I already have an account</a>
+    </div>
+    <div class="hero-actions" data-auth-show="subscriber">
+      <span class="hero-status" data-i18n="home_status_subscriber">Your premium access is active. Pick something below.</span>
+    </div>
+    <div class="hero-actions" data-auth-show="user-no-sub">
+      <span class="hero-status" data-i18n="home_status_expired">Your subscription is inactive. Renew to keep watching in full.</span>
+      <a href="/register" class="btn btn-primary" data-i18n="home_cta_renew">Renew</a>
+    </div>
+  </section>
+
+  <section class="library">
+    <div class="library-head">
+      <h2 data-i18n="library_title">Library</h2>
+      <span class="library-note" data-auth-show="anon" data-i18n="library_preview_note">15-second preview for guests. Subscribe to unlock the full library.</span>
+    </div>
+    <div id="videoGrid" class="grid"></div>
+    <div id="emptyState" class="empty" hidden>
+      <span data-i18n="library_empty">Nothing has been published yet. Check back soon.</span>
+    </div>
+  </section>
+
+  <section class="features">
+    <div class="feature">
+      <h3 data-i18n="feat_drm_title">Encrypted streams</h3>
+      <p data-i18n="feat_drm_body">Every byte is delivered through AES-128 encrypted HLS over short-lived, IP-bound URLs.</p>
+    </div>
+    <div class="feature">
+      <h3 data-i18n="feat_crypto_title">Pay in crypto</h3>
+      <p data-i18n="feat_crypto_body">BTC, ETH, USDT, LTC, SOL, XMR and more. Powered by NowPayments. No card, no chargebacks.</p>
+    </div>
+    <div class="feature">
+      <h3 data-i18n="feat_privacy_title">Privacy first</h3>
+      <p data-i18n="feat_privacy_body">No name. No phone. Just an email for your auto-generated credentials.</p>
+    </div>
+  </section>
+</main>
+
+<footer class="footer">
+  <span data-i18n="footer_built_with">Streamed with HLS over Node.js</span>
+</footer>
+
+<script src="/static/i18n_client.js"></script>
+<script src="/static/app.js"></script>
+<script src="/static/home.js"></script>
+</body>
+</html>

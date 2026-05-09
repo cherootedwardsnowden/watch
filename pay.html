@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<title data-i18n="meta_title_pay">Crypto checkout</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono&display=swap">
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body class="auth-body">
+<header class="topbar">
+  <a class="brand" href="/">
+    <span class="logo-dot"></span>
+    <span class="brand-name">LUMEN</span>
+  </a>
+  <nav class="nav">
+    <select id="langSwitcher" class="lang-switcher" aria-label="language"></select>
+    <a href="/login" class="btn btn-ghost" data-i18n="nav_login">Sign in</a>
+  </nav>
+</header>
+
+<main class="pay-wrap">
+  <div class="pay-card">
+    <div class="pay-stage" id="stageError" hidden>
+      <h2 data-i18n="pay_error_title">This page is locked.</h2>
+      <p id="errorMessage" data-i18n="pay_error_body">Either the link is invalid, expired, or it was opened from a different IP than the one that created it.</p>
+      <a class="btn btn-primary" href="/register" data-i18n="pay_error_retry">Start over</a>
+    </div>
+
+    <div class="pay-stage" id="stageSelect" hidden>
+      <h1 data-i18n="pay_select_title">Choose how you want to pay</h1>
+      <p class="pay-sub">
+        <span data-i18n="pay_for">Premium subscription -</span>
+        <strong>$<span id="priceUsd">5</span> USD</strong>
+        <span> / </span>
+        <span data-i18n="pay_period_30">30 days</span>
+      </p>
+      <p class="pay-email" data-i18n="pay_email_hint">Credentials will be sent to:</p>
+      <p class="pay-email-value" id="payEmail"></p>
+
+      <label class="field">
+        <span data-i18n="pay_select_currency">Coin / Network</span>
+        <select id="currencySelect" class="select-fancy">
+          <option value="" data-i18n="pay_loading_currencies">Loading currencies...</option>
+        </select>
+      </label>
+
+      <div class="estimate-box" id="estimateBox" hidden>
+        <div class="estimate-row">
+          <span data-i18n="pay_estimated_total">Estimated amount:</span>
+          <strong><span id="estAmount">-</span> <span id="estCurrency">-</span></strong>
+        </div>
+        <p class="estimate-note" data-i18n="pay_estimate_note">Final amount is locked when you click "Generate address".</p>
+      </div>
+
+      <button id="createBtn" class="btn btn-primary btn-block btn-lg" disabled data-i18n="pay_create_address">Generate payment address</button>
+      <div id="createError" class="form-error" hidden></div>
+    </div>
+
+    <div class="pay-stage" id="stageInvoice" hidden>
+      <h1 data-i18n="pay_invoice_title">Send the exact amount</h1>
+      <div class="invoice">
+        <div class="invoice-row">
+          <span class="invoice-label" data-i18n="pay_amount_label">Amount</span>
+          <span class="invoice-value mono"><span id="invAmount">-</span> <span id="invCurrency">-</span></span>
+          <button class="copy-btn" data-copy="invAmount" data-i18n="copy">Copy</button>
+        </div>
+        <div class="invoice-row">
+          <span class="invoice-label" data-i18n="pay_address_label">Address</span>
+          <span class="invoice-value mono break" id="invAddress">-</span>
+          <button class="copy-btn" data-copy="invAddress" data-i18n="copy">Copy</button>
+        </div>
+        <div class="invoice-row" id="invExtraRow" hidden>
+          <span class="invoice-label" data-i18n="pay_extra_label">Memo / Tag</span>
+          <span class="invoice-value mono break" id="invExtra">-</span>
+          <button class="copy-btn" data-copy="invExtra" data-i18n="copy">Copy</button>
+        </div>
+        <div class="invoice-row">
+          <span class="invoice-label" data-i18n="pay_network_label">Network</span>
+          <span class="invoice-value" id="invNetwork">-</span>
+        </div>
+      </div>
+
+      <div class="countdown">
+        <div class="countdown-bar"><div id="countdownFill"></div></div>
+        <div class="countdown-text">
+          <span data-i18n="pay_time_left">Time remaining:</span>
+          <strong id="countdownText">05:00</strong>
+        </div>
+      </div>
+
+      <div class="status-line">
+        <span class="dot pulse"></span>
+        <span id="statusText" data-i18n="pay_status_waiting">Waiting for transaction...</span>
+      </div>
+
+      <p class="warning" data-i18n="pay_warning">Send only the exact amount on the matching network. Underpayments are not auto-credited.</p>
+    </div>
+
+    <div class="pay-stage" id="stagePaid" hidden>
+      <div class="success-icon"></div>
+      <h1 data-i18n="pay_paid_title">Payment confirmed</h1>
+      <p data-i18n="pay_paid_body">Your subscription is active. We have emailed your username and password. Sign in below to start watching.</p>
+      <a href="/login" class="btn btn-primary btn-lg" data-i18n="pay_paid_login">Open Login</a>
+    </div>
+
+    <div class="pay-stage" id="stageExpired" hidden>
+      <h1 data-i18n="pay_expired_title">This invoice expired.</h1>
+      <p data-i18n="pay_expired_body">Five minutes have passed without a confirmed transaction. You can start a new checkout, your earlier session will be discarded.</p>
+      <a class="btn btn-primary" href="/register" data-i18n="pay_expired_retry">Start over</a>
+    </div>
+  </div>
+</main>
+
+<script src="/static/i18n_client.js"></script>
+<script src="/static/app.js"></script>
+<script src="/static/pay.js"></script>
+</body>
+</html>
