@@ -112,7 +112,7 @@ app.post('/api/register', async (req, res) => {
     }
     const ip = auth.getClientIp(req);
     const sessionId = crypto.randomBytes(16).toString('hex');
-    const slug = tokens.randomPath(3) + '/' + crypto.randomBytes(8).toString('hex');
+    const slug = tokens.randomPath(3).replace(/\//g, '-') + '-' + crypto.randomBytes(8).toString('hex');
 
     const session = db.insert('payments', {
       id: sessionId,
