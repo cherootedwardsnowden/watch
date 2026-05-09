@@ -201,7 +201,8 @@ window.addEventListener('lumen-ready', () => {
     } catch (e) {}
   }
 
-  const CHUNK_SIZE = 5 * 1024 * 1024;
+  const CHUNK_SIZE = 10 * 1024 * 1024;
+  const PARALLEL = 4;
 
   async function startUpload(file, title, description) {
     const totalChunks = Math.ceil(file.size / CHUNK_SIZE);
@@ -215,6 +216,26 @@ window.addEventListener('lumen-ready', () => {
     localStorage.setItem('lumen.uploads', JSON.stringify(local));
 
     await runUpload(uploadId, file, totalChunks);
+  }
+
+  async function uploadOneChunk(uploadId, file, i) {
+    const start = i * CHUNK_SIZE;
+    const end = Math.min(start + CHUNK_SIZE, file.size);
+    const blob = file.slice(start, end);
+    const fd = new FormData();
+    fd.append('chunk', blob, `chunk_${i}`);
+    let attempts = 0;
+    while (true) {
+      try {
+        const r = await fetch(`/api/admin/upload/${uploadId}/chunk/${i}`, { method: 'POST', body: fd, credentials: 'include' });
+        if (!r.ok) throw new Error('bad_status_' + r.status);
+        return;
+      } catch (e) {
+        attempts++;
+        if (attempts > 6) throw e;
+        await new Promise(r => setTimeout(r, 1000 * attempts));
+      }
+    }
   }
 
   async function runUpload(uploadId, file, totalChunks) {
@@ -236,31 +257,43 @@ window.addEventListener('lumen-ready', () => {
     } catch (e) { state = null; }
     const received = new Set((state?.receivedChunks) || []);
 
-    for (let i = 0; i < totalChunks; i++) {
-      if (received.has(i)) continue;
-      const start = i * CHUNK_SIZE;
-      const end = Math.min(start + CHUNK_SIZE, file.size);
-      const blob = file.slice(start, end);
-      const fd = new FormData();
-      fd.append('chunk', blob, `chunk_${i}`);
-      let attempts = 0;
-      while (true) {
-        try {
-          const r = await fetch(`/api/admin/upload/${uploadId}/chunk/${i}`, { method: 'POST', body: fd, credentials: 'include' });
-          if (!r.ok) throw new Error('bad_status');
-          received.add(i);
-          break;
-        } catch (e) {
-          attempts++;
-          if (attempts > 6) throw e;
-          await new Promise(r => setTimeout(r, 1500 * attempts));
-        }
-      }
+    const queue = [];
+    for (let i = 0; i < totalChunks; i++) if (!received.has(i)) queue.push(i);
+
+    function updateProgress() {
       const pct = ((received.size / totalChunks) * 100).toFixed(1);
       const tEl = document.getElementById(`prog_text_${uploadId}`);
       const bEl = document.getElementById(`prog_bar_${uploadId}`);
       if (tEl) tEl.textContent = `${received.size} / ${totalChunks}`;
       if (bEl) bEl.style.width = `${pct}%`;
+    }
+    updateProgress();
+
+    let cursor = 0;
+    let failed = false;
+    async function worker() {
+      while (!failed) {
+        const my = cursor++;
+        if (my >= queue.length) return;
+        const idx = queue[my];
+        try {
+          await uploadOneChunk(uploadId, file, idx);
+          received.add(idx);
+          updateProgress();
+        } catch (e) {
+          failed = true;
+          throw e;
+        }
+      }
+    }
+    const workers = [];
+    for (let w = 0; w < Math.min(PARALLEL, queue.length); w++) workers.push(worker());
+    try {
+      await Promise.all(workers);
+    } catch (e) {
+      const badge = row.querySelector('.badge');
+      if (badge) { badge.className = 'badge failed'; badge.textContent = 'upload failed'; }
+      return;
     }
 
     try {
