@@ -26,18 +26,28 @@ async function ping() {
 }
 
 async function getCurrencies() {
+  let universal = [];
   try {
-    const r = await client().get('/merchant/coins');
-    return r.data?.selectedCurrencies || [];
+    const r = await client().get('/currencies');
+    universal = Array.isArray(r.data?.currencies) ? r.data.currencies : [];
   } catch (e) {
-    try {
-      const r2 = await client().get('/currencies');
-      return r2.data?.currencies || [];
-    } catch (e2) {
-      console.error('[payment] currencies error:', e2.message);
-      return [];
-    }
+    console.error('[payment] /currencies failed:', e.response?.status, e.response?.data || e.message);
   }
+  let selected = [];
+  try {
+    const r2 = await client().get('/merchant/coins');
+    selected = Array.isArray(r2.data?.selectedCurrencies) ? r2.data.selectedCurrencies : [];
+  } catch (e) {
+    console.error('[payment] /merchant/coins failed:', e.response?.status, e.response?.data || e.message);
+  }
+  if (selected.length && universal.length) {
+    const uniSet = new Set(universal.map(c => String(c).toLowerCase()));
+    const filtered = selected.map(c => String(c).toLowerCase()).filter(c => uniSet.has(c));
+    if (filtered.length) return filtered;
+  }
+  if (selected.length) return selected.map(c => String(c).toLowerCase());
+  if (universal.length) return universal.map(c => String(c).toLowerCase());
+  return [];
 }
 
 async function estimatePrice(currency) {
