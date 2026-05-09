@@ -157,15 +157,18 @@ app.post('/api/register', async (req, res) => {
   }
 });
 
+const FALLBACK_CURRENCIES = ['btc', 'eth', 'usdttrc20', 'usdterc20', 'usdtbsc', 'ltc', 'doge', 'sol', 'xmr', 'bnbbsc', 'trx', 'matic', 'ada', 'bch', 'dot'];
 app.get('/api/payment/currencies', async (req, res) => {
   if (!payment.hasApiKey()) {
-    return res.json({
-      ok: true,
-      offline: true,
-      currencies: ['btc', 'eth', 'usdttrc20', 'usdterc20', 'ltc', 'doge', 'sol', 'xmr', 'bnbbsc', 'trx']
-    });
+    return res.json({ ok: true, offline: true, currencies: FALLBACK_CURRENCIES });
   }
-  const list = await payment.getCurrencies();
+  let list = [];
+  try { list = await payment.getCurrencies(); }
+  catch (e) { console.error('[currencies] getCurrencies threw:', e.message); }
+  if (!Array.isArray(list) || list.length === 0) {
+    console.warn('[currencies] empty list, returning fallback');
+    return res.json({ ok: true, fallback: true, currencies: FALLBACK_CURRENCIES });
+  }
   res.json({ ok: true, currencies: list });
 });
 
